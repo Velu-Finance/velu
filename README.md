@@ -1,3 +1,20 @@
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?color=%23FF6B6B&lines=Velu:+Modern+FinTech+Stack" alt="Typing SVG" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/actions/workflow/status/Velu-Finance/velu/ci.yml" alt="CI">
+  <img src="https://img.shields.io/github/license/Velu-Finance/velu" alt="License">
+  <img src="https://img.shields.io/github/stars/Velu-Finance/velu?style=social" alt="Stars">
+</p>
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=orange" alt="Rust">
+  <img src="https://img.shields.io/badge/Svelte-5A67D8?style=flat-square&logo=svelte&logoColor=white" alt="Svelte">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+</div>
+
 # Velu — Payment Control & Fraud Prevention
 
 ## Overview
