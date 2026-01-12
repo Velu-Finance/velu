@@ -68,7 +68,7 @@ jobs:
 
       - name: Backend bump (если backend changes)
         if: steps.changelog.outputs.skipped == 'false' && contains(steps.changelog.outputs.content, 'backend/')
-        uses: tj-actions/cargo-bump@v4
+        uses: tj-actions/cargo-bump@v3
         with:
           release_type: patch
 
