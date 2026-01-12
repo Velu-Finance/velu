@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Backend check
+        run: cd backend && cargo check
+
+      - name: Backend tests
+        run: cd backend && cargo test --verbose
+
+      - name: Backend lint
+        run: cd backend && cargo clippy -- -D warnings
+
+      - name: Backend format
+        run: cd backend && cargo fmt -- --check
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "yarn"
+
+      - name: Frontend lint
+        run: cd frontend && yarn lint
+
+      - name: Frontend format
+        run: cd frontend && yarn format --check
+
+      - name: Frontend typecheck
+        run: cd frontend && yarn check
+
+  release:
+    needs: [rust, frontend]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Для git log
+
+      - name: Conventional Changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Backend bump (если backend changes)
+        if: steps.changelog.outputs.skipped == 'false' && contains(steps.changelog.outputs.content, 'backend/')
+        uses: tj-actions/cargo-bump@v4
+        with:
+          release_type: patch
+
+      - name: Frontend bump (если frontend changes)
+        if: steps.changelog.outputs.skipped == 'false' && contains(steps.changelog.outputs.content, 'frontend/')
+        run: |
+          npm_version=$(jq -r .version frontend/package.json)
+          new_version=$(echo $npm_version | awk -F. '{print $1"."$2"."$3+1}')
+          cd frontend
+          yarn version --new-version $new_version --no-git-tag-version
+
+      - name: Update Changelog
+        if: steps.changelog.outputs.skipped == 'false'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add CHANGELOG.md backend/Cargo.toml frontend/package.json
+          git commit -m "chore(release): $(date +%Y-%m-%d)"
+          git push
