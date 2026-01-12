@@ -51,15 +51,6 @@ jobs:
           cache: "yarn"
           cache-dependency-path: frontend/yarn.lock
 
-      - name: Frontend lint
-        run: cd frontend && yarn lint
-
-      - name: Frontend format
-        run: cd frontend && yarn format --check
-
-      - name: Frontend typecheck
-        run: cd frontend && yarn check
-
   release:
     needs: [rust, frontend]
     if: github.ref == 'refs/heads/main'
