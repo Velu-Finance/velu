@@ -23,8 +23,6 @@ Velu is a SaaS tool for companies that pay many suppliers every month using paym
 
 The goal is simple: reduce the risk of sending money to fraudsters when bank account details are changed by mistake or due to email/payment fraud.
 
-***
-
 ## Key Features
 
 - Upload payment files (CSV and pain.001) with hundreds or thousands of payments.
@@ -50,8 +48,6 @@ The goal is simple: reduce the risk of sending money to fraudsters when bank acc
   - How many were OK vs needed review.
   - Top suppliers by volume.
 
-***
-
 ## Typical Use Case
 
 1. An accountant exports a payment file from the company’s ERP/accounting system.
@@ -67,8 +63,6 @@ The goal is simple: reduce the risk of sending money to fraudsters when bank acc
    - Approve and mark the new account as trusted.
    - Reject and investigate further.
 
-***
-
 ## Tech Stack (High Level)
 
 - **Backend:** Rust, Axum, SeaORM, PostgreSQL.
@@ -76,8 +70,6 @@ The goal is simple: reduce the risk of sending money to fraudsters when bank acc
 - **Infra:** Docker, Caddy, VPS hosting (e.g. Hetzner) with HTTPS.
 
 The project is structured as a mono-repo with `backend/`, `frontend/`, `docs/`, and deployment scripts.
-
-***
 
 ## Why It’s Useful
 
