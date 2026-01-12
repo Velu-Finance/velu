@@ -4,8 +4,6 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/actions/workflow/status/Velu-Finance/velu/ci.yml" alt="CI">
-  <img src="https://img.shields.io/github/license/Velu-Finance/velu" alt="License">
-  <img src="https://img.shields.io/github/stars/Velu-Finance/velu?style=social" alt="Stars">
 </p>
 
 <div align="center">
