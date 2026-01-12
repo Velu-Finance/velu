@@ -51,11 +51,9 @@ jobs:
           cache: "yarn"
           cache-dependency-path: frontend/yarn.lock
 
-      - name: Lint
-        run: cd frontend && npx eslint src --max-warnings 0
-
-      - name: Format
-        run: cd frontend && npx prettier --check src/**/*.svelte
+      - run: cd frontend && yarn install --frozen-lockfile
+      - run: cd frontend && yarn lint
+      - run: cd frontend && yarn format --check
 
   release:
     needs: [rust, frontend]
