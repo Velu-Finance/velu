@@ -1,8 +1,6 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
@@ -50,35 +48,3 @@ jobs:
           node-version: 20
           cache: "yarn"
           cache-dependency-path: frontend/yarn.lock
-
-  release:
-    needs: [rust, frontend]
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Для git log
-
-      - name: Backend bump (если backend changes)
-        if: steps.changelog.outputs.skipped == 'false' && contains(steps.changelog.outputs.content, 'backend/')
-        uses: tj-actions/cargo-bump@v3
-        with:
-          release_type: patch
-
-      - name: Frontend bump (если frontend changes)
-        if: steps.changelog.outputs.skipped == 'false' && contains(steps.changelog.outputs.content, 'frontend/')
-        run: |
-          npm_version=$(jq -r .version frontend/package.json)
-          new_version=$(echo $npm_version | awk -F. '{print $1"."$2"."$3+1}')
-          cd frontend
-          yarn version --new-version $new_version --no-git-tag-version
-
-      - name: Update Changelog
-        if: steps.changelog.outputs.skipped == 'false'
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add CHANGELOG.md backend/Cargo.toml frontend/package.json
-          git commit -m "chore(release): $(date +%Y-%m-%d)"
-          git push
