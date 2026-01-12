@@ -60,13 +60,6 @@ jobs:
         with:
           fetch-depth: 0 # Для git log
 
-      - name: Conventional Changelog
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          skip-pull: true
-
       - name: Backend bump (если backend changes)
         if: steps.changelog.outputs.skipped == 'false' && contains(steps.changelog.outputs.content, 'backend/')
         uses: tj-actions/cargo-bump@v3
