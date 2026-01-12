@@ -65,6 +65,7 @@ jobs:
         uses: TriPSs/conventional-changelog-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          skip-pull: true
 
       - name: Backend bump (если backend changes)
         if: steps.changelog.outputs.skipped == 'false' && contains(steps.changelog.outputs.content, 'backend/')
