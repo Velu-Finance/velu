@@ -7,8 +7,7 @@ pub mod health;
 pub mod root;
 
 pub fn create_router(state: Arc<AppState>) -> Router {
-    let api_routes = Router::new()
-        .merge(health::routes());
+    let api_routes = Router::new().merge(health::routes());
 
     Router::new()
         .merge(root::routes())
