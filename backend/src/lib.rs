@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use axum::Router;
 use std::net::SocketAddr;
 use std::sync::Arc;
@@ -22,7 +22,7 @@ pub async fn create_app() -> Result<App> {
     let config = config::Config::from_env()?;
     telemetry::init();
 
-    let addr = config.addr();
+    let addr = config.addr()?;
     let state = Arc::new(AppState {
         config: config.clone(),
     });
@@ -33,17 +33,19 @@ pub async fn create_app() -> Result<App> {
 }
 
 impl App {
-    pub async fn run(self) {
+    pub async fn run(self) -> Result<()> {
         let listener = tokio::net::TcpListener::bind(self.addr)
             .await
-            .expect("Failed to bind");
+            .with_context(|| format!("Failed to bind to {}", self.addr))?;
 
         tracing::info!("Server on {}", self.addr);
 
         axum::serve(listener, self.router)
             .with_graceful_shutdown(shutdown_signal())
             .await
-            .unwrap();
+            .context("Server failed to run")?;
+
+        Ok(())
     }
 }
 

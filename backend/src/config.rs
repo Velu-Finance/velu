@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use dotenvy::dotenv;
 use std::env;
 use std::net::SocketAddr;
@@ -19,14 +19,14 @@ impl Config {
             port: env::var("PORT")
                 .unwrap_or_else(|_| "8000".into())
                 .parse()
-                .unwrap(),
+                .context("PORT must be a valid u16")?,
             database_url: env::var("DATABASE_URL").ok(),
         })
     }
 
-    pub fn addr(&self) -> SocketAddr {
+    pub fn addr(&self) -> Result<SocketAddr> {
         format!("{}:{}", self.host, self.port)
             .parse()
-            .expect("Invalid addr")
+            .context("Invalid host or port")
     }
 }
